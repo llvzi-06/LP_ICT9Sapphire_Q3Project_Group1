@@ -1,139 +1,92 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Route Fare App with Map</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet">
+<meta charset="UTF-8">
+<title>Route Fare App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-    <link rel="stylesheet" 
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+body{
+    background-image: url("https://static.vecteezy.com/system/resources/previews/043/217/572/large_2x/road-background-cozy-road-with-markings-and-dense-summer-forest-on-the-sides-photo.jpg");
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-    <style>
-        body{
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-top: 0;
-        }
+.content-wrapper{
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
 
-        body .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-        }
+.card{
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    color: white;
+    border: none;
+}
 
-        .card{
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            color: white;
-            border: none;
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            width: 100%;
-            padding: 2rem !important;
-        }
+.btn-main{
+    background-color: #00c6ff;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
 
-        .btn-main{
-            background-color: #00c6ff;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-        }
+.btn-main:hover{
+    background-color: #0096c7;
+}
 
-        .btn-main:hover{
-            background-color: #0096c7;
-        }
-
-        #map{
-            height: 300px;
-            border-radius: 15px;
-            margin-top: 15px;
-        }
-
-        #loginPage{
-            position: relative;
-            top: 0;
-            left: 0;      
-        }
-
-        #calculatorPage{
-            position: relative;
-            top: 0;
-            left: 0;           
-        }
-        nav {
-            background: linear-gradient(135deg, #0d47a1, #1565c0) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            padding: 1rem 0;
-        }
-
-        nav .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #00c6ff !important;
-        }
-
-        nav .nav-link {
-            color: white !important;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        nav .nav-link:hover {
-            color: #00c6ff !important;
-            transform: translateY(-2px);
-        }
-
-        nav .nav-link.active {
-            color: #00c6ff !important;
-            border-bottom: 2px solid #00c6ff;
-        }
-    </style>
+#map{
+    height: 300px;
+    border-radius: 15px;
+    margin-top: 15px;
+}
+</style>
 </head>
-
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">🚖 NCR Fare System</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="home.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#calculatorPage">Calculator</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Contact</a>
-                </li>
-            </ul>
-        </div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">🚖 NCR Route Fare</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showHome()">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showLogin()">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showSchedule()">Schedule</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showHelp()">Help</a>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>
 
+<div class="content-wrapper">
 <div class="container">
 <div class="row justify-content-center">
 <div class="col-lg-6">
 
-<div class="card p-4 shadow-lg" id="loginPage">
-    <h2 class="text-center mb-4">🚖 NCR Route Fare System</h2>
+<div class="card p-5 shadow-lg text-center" id="homePage">
+    <h1 class="mb-4">🚖 Welcome to NCR Route Fare System</h1>
+    <p class="mb-4">Calculate your travel fare across NCR quickly and easily.</p>
+    <button class="btn btn-main w-100" onclick="showLogin()">Login</button>
+</div>
+
+<div class="card p-4 shadow-lg" id="loginPage" style="display:none;">
+    <h2 class="text-center mb-4">Login</h2>
 
     <h5>Username</h5>
     <input type="text" id="username" class="form-control mb-3">
@@ -159,17 +112,19 @@
         <option value="0">Choose Destination...</option>
         <option value="80" data-lat="14.5995" data-lng="120.9842">Manila - PHP 80</option>
         <option value="100" data-lat="14.5547" data-lng="121.0244">Makati - PHP 100</option>
-        <option value="120" data-lat="14.6760" data-lng="121.0437">Quezon City - PHP 120</option>
         <option value="110" data-lat="14.5764" data-lng="121.0851">Pasig - PHP 110</option>
+        <option value="120" data-lat="14.6760" data-lng="121.0437">Quezon City - PHP 120</option>
     </select>
 
-    <h5>Distance (KM)</h5>
-    <select class="form-control mb-3" id="distance">
-        <option value="0">Choose Distance...</option>
-        <option value="1">1 KM</option>
-        <option value="2">2 KM</option>
-        <option value="3">3 KM</option>
-        <option value="4">4 KM</option>
+    <h5>Select Quantity of People</h5>
+    <select class="form-control mb-3" id="people">
+        <option value="0">Choose Quantity of People...</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
     </select>
 
     <button class="btn btn-main w-100 mb-3" onclick="computeTotal()">Compute Fare</button>
@@ -181,16 +136,79 @@
     <button class="btn btn-danger w-100 mt-3" onclick="logout()">Logout</button>
 </div>
 
+<div class="card p-4 shadow-lg" id="schedulePage" style="display:none;">
+    <h2 class="text-center mb-4">Daily Rider Schedule</h2>
+
+    <h5>Select Time of Day</h5>
+    <select class="form-control mb-3" id="timeSelect" onchange="checkSchedule()">
+        <option value="">Choose Time...</option>
+        <option value="morning">Morning (6AM - 11AM)</option>
+        <option value="afternoon">Afternoon (12PM - 5PM)</option>
+        <option value="evening">Evening (6PM - 10PM)</option>
+        <option value="night">Night (11PM - 5AM)</option>
+    </select>
+
+    <p class="fw-bold" id="scheduleResult"></p>
+</div>
+<div class="card p-4 shadow-lg" id="Help" style="display:none;">
+    <h2 class="text-center mb-4">Help and Contacts</h2>
+
+    <h5>Help Contacts:</h5>
+
+    <p>Our Main Offices: The White House</p>
+    <p>Our Offices:</p>
+       <p>89.79.223.182</p>
+       <p>146.186.2.203</p>
+       <p>230.225.14.246</p>
+       <p>37.228.168.228</p>
+       <p>200.248.228.74</p>
+    </select>
+  <button class="btn btn-main w-100 mb-3" onclick="location.reload()">Exit</button>
+</div>
+
+</div>
 </div>
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
 let map;
 let marker;
+
+function showHome(){
+    document.getElementById("homePage").style.display = "block";
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("calculatorPage").style.display = "none";
+    document.getElementById("schedulePage").style.display = "none";
+    document.getElementById("Help").style.display = "none";
+}
+
+function showLogin(){
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("loginPage").style.display = "block";
+    document.getElementById("calculatorPage").style.display = "none";
+    document.getElementById("schedulePage").style.display = "none";
+    document.getElementById("Help").style.display = "none";
+}
+
+function showSchedule(){
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("calculatorPage").style.display = "none";
+    document.getElementById("schedulePage").style.display = "block";
+    document.getElementById("Help").style.display = "none";
+}
+
+function showHelp(){
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("calculatorPage").style.display = "none";
+    document.getElementById("schedulePage").style.display = "none";
+    document.getElementById("Help").style.display = "block";
+}
 
 function nextPage(){
     let username = document.getElementById("username").value;
@@ -204,34 +222,34 @@ function nextPage(){
     else{
         document.getElementById("loginPage").style.display = "none";
         document.getElementById("calculatorPage").style.display = "block";
-
         document.getElementById("welcomeUser").innerHTML =
-        "Welcome, <b>" + username + "</b> 👋";
-
+        "Welcome, <b>" + username;
         loadMap();
     }
 }
 
 function computeTotal(){
     let locationPrice = Number(document.getElementById("location").value);
-    let distance = Number(document.getElementById("distance").value);
+    let people = Number(document.getElementById("people").value);
 
-    if(locationPrice === 0 || distance === 0){
+    if(locationPrice === 0 || people === 0){
         document.getElementById("result").innerHTML =
-        "Please select destination and distance.";
+        "Please select destination and how many people is riding.";
         return;
     }
 
-    let distanceFee = distance * 30;
-    let total = locationPrice + distanceFee;
+    let peopleFee = people * 30;
+    let total = locationPrice + peopleFee;
 
     document.getElementById("result").innerHTML =
         "Base Fare: PHP " + locationPrice + "<br>" +
-        "Distance Fee: PHP " + distanceFee + "<br>" +
+        "People Fee: PHP " + peopleFee + "<br>" +
         "<hr>Total Fare: PHP " + total;
 }
 
+/* MAP */
 function loadMap(){
+    if(map) return;
     map = L.map('map').setView([14.5995, 120.9842], 11);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -258,9 +276,31 @@ function changeLocation(){
     }
 }
 
+/* SCHEDULE LOGIC */
+function checkSchedule(){
+    let time = document.getElementById("timeSelect").value;
+    let result = document.getElementById("scheduleResult");
+
+    let riders;
+    let status;
+
+    if(time === "morning"){ riders = 25; }
+    else if(time === "afternoon"){ riders = 18; }
+    else if(time === "evening"){ riders = 10; }
+    else if(time === "night"){ riders = 5; }
+    else{ result.innerHTML = ""; return; }
+
+    if(riders >= 20){ status = "High Availability ✅"; }
+    else if(riders >= 10){ status = "Limited Availability ⚠️"; }
+    else{ status = "Almost Full ❌"; }
+
+    result.innerHTML =
+        "Available Riders: " + riders + "<br>" +
+        "Status: " + status;
+}
+
 function logout(){
-    document.getElementById("calculatorPage").style.display = "none";
-    document.getElementById("loginPage").style.display = "block";
+    showHome();
     document.getElementById("result").innerHTML = "";
 }
 
@@ -268,3 +308,6 @@ function logout(){
 
 </body>
 </html>
+
+    
+
